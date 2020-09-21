@@ -1,5 +1,6 @@
 package pages;
 
+
 import com.codeborne.selenide.SelenideElement;
 import data.DataGenerator;
 import org.openqa.selenium.Keys;
@@ -21,11 +22,10 @@ public class MoneyTransferPage {
             String cardNumber = "5559000000000001";
             fromCardField.setValue(cardNumber);
         }
-        else if (cardIndex == 2) {
+        else {
             String cardNumber = "5559000000000002";
             fromCardField.setValue(cardNumber);
         }
-        else System.out.println("Выберите карту номер 1 или 2");
         Button.click();
     }
 }
