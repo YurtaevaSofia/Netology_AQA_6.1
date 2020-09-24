@@ -21,4 +21,8 @@ public class MoneyTransferPage {
         fromCardField.setValue(id);
         Button.click();
     }
+
+    public void lookForMessage(){
+        $("[denied_message]").shouldHave(text("Недостаточно средств!"));
+    }
 }

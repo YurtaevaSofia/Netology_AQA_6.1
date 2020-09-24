@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MoneyTransferTest {
     int smallTransferAmount = 100;
     int bigTransferAmount = 12000;
+    DataGenerator dataGenerator = new DataGenerator();
 
     @BeforeEach
     void setup() {
@@ -43,12 +44,12 @@ class MoneyTransferTest {
         VerificationPage verificationPage = loginPage.validLogin(authInfo);
         DataGenerator.VerificationCode verificationCode = DataGenerator.getVerificationCodeFor(authInfo);
         DashboardPage dashboardPage = verificationPage.validVerify(verificationCode);
-        int expectedFirstCardBalance = dashboardPage.getCardBalance("5559000000000001") - smallTransferAmount;
-        int expectedSecondCardBalance = dashboardPage.getCardBalance("5559000000000002") + smallTransferAmount;
-        MoneyTransferPage moneyTransferPage = dashboardPage.moneyTransfer(dashboardPage, "5559000000000002");// с одной на другую
-        moneyTransferPage.transferMoney(smallTransferAmount, "5559000000000001");
-        int firstCardBalanceAfterTransfer = dashboardPage.getCardBalance("5559000000000001");
-        int secondCardBalanceAfterTransfer = dashboardPage.getCardBalance("5559000000000002");
+        int expectedFirstCardBalance = dashboardPage.getCardBalance(dataGenerator.getFirstCardNumber()) - smallTransferAmount;
+        int expectedSecondCardBalance = dashboardPage.getCardBalance(dataGenerator.getSecondCardNumber()) + smallTransferAmount;
+        MoneyTransferPage moneyTransferPage = dashboardPage.moneyTransfer(dashboardPage, dataGenerator.getSecondCardNumber());// с одной на другую
+        moneyTransferPage.transferMoney(smallTransferAmount, dataGenerator.getFirstCardNumber());
+        int firstCardBalanceAfterTransfer = dashboardPage.getCardBalance(dataGenerator.getFirstCardNumber());
+        int secondCardBalanceAfterTransfer = dashboardPage.getCardBalance(dataGenerator.getSecondCardNumber());
         assertEquals(expectedFirstCardBalance, firstCardBalanceAfterTransfer);
         assertEquals(expectedSecondCardBalance, secondCardBalanceAfterTransfer);
 
@@ -62,11 +63,11 @@ class MoneyTransferTest {
         VerificationPage verificationPage = loginPage.validLogin(authInfo);
         DataGenerator.VerificationCode verificationCode = DataGenerator.getVerificationCodeFor(authInfo);
         DashboardPage dashboardPage = verificationPage.validVerify(verificationCode);
-        int expectedFirstCardBalance = dashboardPage.getCardBalance("5559000000000001") - bigTransferAmount;
-        int expectedSecondCardBalance = dashboardPage.getCardBalance("5559000000000002") + bigTransferAmount;
-        MoneyTransferPage moneyTransferPage = dashboardPage.moneyTransfer(dashboardPage, "5559000000000002");  //с одной на другую
-        moneyTransferPage.transferMoney(bigTransferAmount, "5559000000000001");
-        $("[denied_message]").shouldHave(text("Welcome, user!"));
+        int expectedFirstCardBalance = dashboardPage.getCardBalance(dataGenerator.getFirstCardNumber()) - bigTransferAmount;
+        int expectedSecondCardBalance = dashboardPage.getCardBalance(dataGenerator.getSecondCardNumber()) + bigTransferAmount;
+        MoneyTransferPage moneyTransferPage = dashboardPage.moneyTransfer(dashboardPage, dataGenerator.getSecondCardNumber());  //с одной на другую
+        moneyTransferPage.transferMoney(bigTransferAmount, dataGenerator.getFirstCardNumber());
+        moneyTransferPage.lookForMessage();
     }
 // пытаемся перевести деньги с карты на нее саму
     @Test
@@ -77,10 +78,10 @@ class MoneyTransferTest {
         VerificationPage verificationPage = loginPage.validLogin(authInfo);
         DataGenerator.VerificationCode verificationCode = DataGenerator.getVerificationCodeFor(authInfo);
         DashboardPage dashboardPage = verificationPage.validVerify(verificationCode);
-        int expectedFirstCardBalance = dashboardPage.getCardBalance("5559000000000001");    //остается таким же
-        MoneyTransferPage moneyTransferPage = dashboardPage.moneyTransfer(dashboardPage, "5559000000000001");
-        moneyTransferPage.transferMoney(smallTransferAmount, "5559000000000001");// с одной на ту же самую карту
-        int firstCardBalanceAfterTransfer = dashboardPage.getCardBalance("5559000000000001");
+        int expectedFirstCardBalance = dashboardPage.getCardBalance(dataGenerator.getFirstCardNumber());    //остается таким же
+        MoneyTransferPage moneyTransferPage = dashboardPage.moneyTransfer(dashboardPage, dataGenerator.getFirstCardNumber());
+        moneyTransferPage.transferMoney(smallTransferAmount, dataGenerator.getFirstCardNumber());// с одной на ту же самую карту
+        int firstCardBalanceAfterTransfer = dashboardPage.getCardBalance(dataGenerator.getFirstCardNumber());
         assertEquals(expectedFirstCardBalance, firstCardBalanceAfterTransfer);
 
     }

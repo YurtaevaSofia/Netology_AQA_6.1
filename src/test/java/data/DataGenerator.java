@@ -53,8 +53,10 @@ public class DataGenerator {
         return new VerificationCode("12345");
     }
 
-    public String getCardNumber(int index){
-        if (index == 1) return "5559 0000 0000 0001";
-        else return "5559 0000 0000 0002";
+    public String getFirstCardNumber(){
+        return "5559000000000001";
+    }
+    public String getSecondCardNumber(){
+        return "5559000000000002";
     }
 }
